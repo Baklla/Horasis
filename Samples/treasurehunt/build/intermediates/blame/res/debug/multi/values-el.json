@@ -1,0 +1,140 @@
+[
+    {
+        "outputFile": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\values-el\\values-el.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 105,
+                    "endColumn": 66,
+                    "endOffset": 167
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 316,
+                        "endColumn": 66,
+                        "endOffset": 378
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 172,
+                    "endColumn": 140,
+                    "endOffset": 308
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 383,
+                        "endColumn": 140,
+                        "endOffset": 519
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 313,
+                    "endColumn": 174,
+                    "endOffset": 483
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 524,
+                        "endColumn": 174,
+                        "endOffset": 694
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 488,
+                    "endColumn": 85,
+                    "endOffset": 569
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 699,
+                        "endColumn": 85,
+                        "endOffset": 780
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 574,
+                    "endColumn": 99,
+                    "endOffset": 669
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 785,
+                        "endColumn": 99,
+                        "endOffset": 880
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 674,
+                    "endColumn": 119,
+                    "endOffset": 789
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 885,
+                        "endColumn": 119,
+                        "endOffset": 1000
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 794,
+                    "endColumn": 184,
+                    "endOffset": 974
+                },
+                "from": {
+                    "file": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\exploded-aar\\cardboard-java\\libraries-common\\unspecified\\res\\values-el\\values.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 1005,
+                        "endColumn": 184,
+                        "endOffset": 1185
+                    }
+                }
+            }
+        ]
+    }
+]

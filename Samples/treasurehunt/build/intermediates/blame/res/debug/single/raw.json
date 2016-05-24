@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\raw\\test_fragment_shader",
+        "source": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\src\\main\\res\\raw\\test_fragment_shader"
+    },
+    {
+        "merged": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\raw\\light_vertex.shader",
+        "source": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\src\\main\\res\\raw\\light_vertex.shader"
+    },
+    {
+        "merged": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\raw\\test_vertex_shader",
+        "source": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\src\\main\\res\\raw\\test_vertex_shader"
+    },
+    {
+        "merged": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\raw\\grid_fragment.shader",
+        "source": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\src\\main\\res\\raw\\grid_fragment.shader"
+    },
+    {
+        "merged": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\build\\intermediates\\res\\merged\\debug\\raw\\passthrough_fragment.shader",
+        "source": "C:\\Users\\Quentin\\Desktop\\cardboard-java\\samples\\treasurehunt\\src\\main\\res\\raw\\passthrough_fragment.shader"
+    }
+]
