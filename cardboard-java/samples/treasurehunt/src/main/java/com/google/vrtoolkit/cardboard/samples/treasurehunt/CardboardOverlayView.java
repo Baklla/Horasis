@@ -47,26 +47,6 @@ public class CardboardOverlayView extends LinearLayout {
     private final CardboardOverlayEyeView mRightView;
     private AlphaAnimation mTextFadeAnimation;
 
-    /**
-     * Key string for saving the state of current page index.
-     */
-    private static final String STATE_CURRENT_PAGE_INDEX = "current_page_index";
-
-    /**
-     * File descriptor of the PDF.
-     */
-    private ParcelFileDescriptor mFileDescriptor;
-
-    /**
-     * {@link PdfRenderer} to render the PDF.
-     */
-    private PdfRenderer mPdfRenderer;
-
-    /**
-     * Page that is currently shown on the screen.
-     */
-    private PdfRenderer.Page mCurrentPage;
-
     public CardboardOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
@@ -119,52 +99,9 @@ public class CardboardOverlayView extends LinearLayout {
     }
 
     private void setImg() {
-        // Show the first page by default.
-        int index = 0;
-        Log.d("TEST AFFICHAGE PDF",String.valueOf(mLeftView.imageView.getWidth()));
-        Log.d("TEST AFFICHAGE PDF",String.valueOf(mRightView.imageView.getHeight()));
-
-        try {
-            openRenderer(getContext());
-            mLeftView.showPage(index);
-            mRightView.showPage(index);
-            closeRenderer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         mLeftView.imageView.setImageResource(R.drawable.circle);
         mRightView.imageView.setImageResource(R.drawable.circle);
     }
-
-
-
-    /**
-     * Sets up a {@link PdfRenderer} and related resources.
-     */
-    private void openRenderer(Context context) throws IOException {
-        // In this sample, we read a PDF from the assets directory.
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+"/1_Introduction.pdf");
-        mFileDescriptor = context.getAssets().openFd(file.getPath()).getParcelFileDescriptor();
-        // This is the PdfRenderer we use to render the PDF.
-        mPdfRenderer = new PdfRenderer(mFileDescriptor);
-    }
-
-    /**
-     * Closes the {@link PdfRenderer} and related resources.
-     *
-     * @throws IOException When the PDF file cannot be closed.
-     */
-    private void closeRenderer() throws IOException {
-        if (null != mCurrentPage) {
-            mCurrentPage.close();
-        }
-        mPdfRenderer.close();
-        mFileDescriptor.close();
-    }
-
-
-
 
     private void setText(String text) {
         mLeftView.setText(text);
@@ -259,41 +196,5 @@ public class CardboardOverlayView extends LinearLayout {
                     (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
         }
 
-        /**
-         * Shows the specified page of PDF to the screen.
-         *
-         * @param index The page index.
-         */
-        private void showPage(int index) {
-            if (mPdfRenderer.getPageCount() <= index) {
-                return;
-            }
-            // Make sure to close the current page before opening another one.
-            if (null != mCurrentPage) {
-                mCurrentPage.close();
-            }
-            // Use `openPage` to open a specific page in PDF.
-            mCurrentPage = mPdfRenderer.openPage(index);
-            // Important: the destination bitmap must be ARGB (not RGB).
-
-            Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(),
-                    Bitmap.Config.ARGB_8888);
-            // Here, we render the page onto the Bitmap.
-            // To render a portion of the page, use the second and third parameter. Pass nulls to get
-            // the default result.
-            // Pass either RENDER_MODE_FOR_DISPLAY or RENDER_MODE_FOR_PRINT for the last parameter.
-            mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            // We are ready to show the Bitmap to user.
-            imageView.setImageBitmap(bitmap);
-        }
-
-        /**
-         * Gets the number of pages in the PDF. This method is marked as public for testing.
-         *
-         * @return The number of pages.
-         */
-        public int getPageCount() {
-            return mPdfRenderer.getPageCount();
-        }
     }
 }

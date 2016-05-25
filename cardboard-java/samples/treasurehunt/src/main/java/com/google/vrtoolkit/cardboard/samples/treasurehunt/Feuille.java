@@ -22,6 +22,9 @@ public class Feuille extends ModelObject {
     public float[] sheetPosition;
     public FloatBuffer textures;
     public int textureParam;
+    public FloatBuffer verticesOnTable;
+
+    public boolean isOnTable = true;
 
     public Context context;
 
@@ -44,6 +47,12 @@ public class Feuille extends ModelObject {
     @Override
     public void make(){
         // make a sheet
+        ByteBuffer bbverticesontable = ByteBuffer.allocateDirect(this.SHEET_COORDS_ON_TABLE.length * 4);
+        bbverticesontable.order(ByteOrder.nativeOrder());
+        verticesOnTable = bbverticesontable.asFloatBuffer();
+        verticesOnTable.put(this.SHEET_COORDS_ON_TABLE);
+        verticesOnTable.position(0);
+
         ByteBuffer bbvertices = ByteBuffer.allocateDirect(this.SHEET_COORDS.length * 4);
         bbvertices.order(ByteOrder.nativeOrder());
         vertices = bbvertices.asFloatBuffer();
@@ -99,32 +108,11 @@ public class Feuille extends ModelObject {
     }
 
     public static int loadTexture(final Context context, final int resourceId) {
-        final int[] textureHandle = new int[2];
+        final int[] textureHandle = new int[1];
 
         GLES20.glGenTextures(1, textureHandle, 0);
 
         if (textureHandle[0] != 0)
-        {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inScaled = false;   // No pre-scaling
-
-            // Read in the resource
-            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-
-            // Bind to the texture in OpenGL
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
-
-            // Set filtering
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
-
-            // Load the bitmap into the bound texture.
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-
-            // Recycle the bitmap, since its data has been loaded into OpenGL.
-            bitmap.recycle();
-        }
-        else if (textureHandle[1] != 0)
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;   // No pre-scaling
@@ -170,6 +158,10 @@ public class Feuille extends ModelObject {
         //checkGLError("updateCubePosition");
     }
 
+    public boolean isOnTable() {
+        return isOnTable;
+    }
+
     @Override
     public void draw(float[] lightPosInEyeSpace, float[] modelView, float[] modelViewProjection, float[] headView) {
         GLES20.glUseProgram(program);
@@ -197,7 +189,7 @@ public class Feuille extends ModelObject {
         GLES20.glUniformMatrix4fv(modelViewParam, 1, false, modelView, 0);
         GLES20.glUniformMatrix4fv(modelViewProjectionParam, 1, false, modelViewProjection, 0);
         GLES20.glVertexAttribPointer(
-                positionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertices);
+                positionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, isOnTable() ? verticesOnTable : vertices);
         GLES20.glVertexAttribPointer(normalParam, 3, GLES20.GL_FLOAT, false, 0, normals);
         GLES20.glVertexAttribPointer(colorParam, 4, GLES20.GL_FLOAT, false, 0, colors);
 
@@ -221,7 +213,7 @@ public class Feuille extends ModelObject {
         return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
     }
 
-    public static final float[] SHEET_COORDS = new float[] {
+    public static final float[] SHEET_COORDS_ON_TABLE = new float[] {
           /*-0.5f, 2.2f, -1.0f,
           -0.5f, 0.2f, -1.0f,
           0.5f, 2.2f, -1.0f,
@@ -235,6 +227,15 @@ public class Feuille extends ModelObject {
             -0.5f, 0.211f, 0.9f,
             0.5f, 0.211f, 0.9f,
             0.5f, 0.211f, -0.7f,
+    };
+
+    public static final float[] SHEET_COORDS = new float[] {
+            -0.4f, 0.911f, 0.5f,   //
+            -0.4f, 0.111f, 1.1f,
+            0.4f, 0.911f, 0.5f,    //
+            -0.4f, 0.111f, 1.1f,
+            0.4f, 0.111f, 1.1f,
+            0.4f, 0.911f, 0.5f,    //
     };
 
     public static final float[] SHEET_NORMALS = new float[] {

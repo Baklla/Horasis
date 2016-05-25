@@ -71,6 +71,10 @@ public class TreasureHuntActivityBIS
   private float[] modelViewProjection;
   private float[] modelView;
 
+
+  private float[] modelViewProjection2;
+  private float[] modelView2;
+
   private float[] modelPosition;
   private float[] headRotation;
 
@@ -185,6 +189,9 @@ public class TreasureHuntActivityBIS
     modelViewProjection = new float[16];
     modelView = new float[16];
 
+    modelViewProjection2 = new float[16];
+    modelView2 = new float[16];
+
     // Model first appears directly in front of user.
     modelPosition = new float[] {0.0f, -1.0f, -1.5f};
     //modelPosition = new float[] {0.0f, 0.0f, -MAX_MODEL_DISTANCE / 2.0f};
@@ -279,6 +286,7 @@ public class TreasureHuntActivityBIS
 
     this.table.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
     this.feuille.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
+    this.feuille.image = this.feuille.loadTexture(this, R.drawable.file_page1);
 
     checkGLError("onSurfaceCreated");
   }
@@ -366,11 +374,9 @@ public class TreasureHuntActivityBIS
     checkGLError("Drawing floor");
 
     // Set modelView for the sheet, so we draw sheet in the correct location
-    Matrix.multiplyMM(modelView, 0, view, 0, this.feuille.model, 0);
-    Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    if(this.feuille.indexPage==0)this.feuille.image = this.feuille.loadTexture(this, R.drawable.link_headphones_music);
-    else this.feuille.image = this.feuille.loadTexture(this, R.drawable.lol);
-    this.feuille.draw(lightPosInEyeSpace,modelView,modelViewProjection,headView);
+    Matrix.multiplyMM(modelView2, 0, view, 0, this.feuille.model, 0);
+    Matrix.multiplyMM(modelViewProjection2, 0, perspective, 0, modelView2, 0);
+    this.feuille.draw(lightPosInEyeSpace,modelView2,modelViewProjection2,headView);
     checkGLError("Drawing sheet");
   }
 
@@ -384,11 +390,23 @@ public class TreasureHuntActivityBIS
   public void onCardboardTrigger() {
     Log.i(TAG, "onCardboardTrigger");
 
-    if (this.feuille.isLookingAtObject(modelView,headView)) {
+    if (this.feuille.isLookingAtObject(modelView2,headView)) {
       if(this.feuille.indexPage==0) this.feuille.indexPage++;
       else this.feuille.indexPage--;
-      this.overlayView.show3DToast("Tu as bien cliqué sur l'image <3");
-      this.feuille.updateModelPosition(modelPosition, soundId, cardboardAudioEngine);
+
+      if(this.feuille.isOnTable()) this.feuille.isOnTable=false;
+      else this.feuille.isOnTable=true;
+
+      this.overlayView.show3DToast("indexPage : " + String.valueOf(this.feuille.indexPage) + " / isOnTable : " + String.valueOf(this.feuille.isOnTable));
+
+      new Runnable(){
+        @Override
+        public void run() {
+          // Load texture
+          if(feuille.indexPage==0)feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page1);
+          else feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page2);
+        }
+      };
     }
     else{
       getCardboardView().resetHeadTracker();

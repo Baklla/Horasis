@@ -47,7 +47,8 @@
         <activity
             android:name=".ListFilesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TreasureHuntActivityBIS"
             android:configChanges="orientation|keyboardHidden|screenSize"

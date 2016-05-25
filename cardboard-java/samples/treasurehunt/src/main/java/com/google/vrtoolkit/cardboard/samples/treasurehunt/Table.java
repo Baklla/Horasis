@@ -34,8 +34,7 @@ public class Table extends ModelObject {
         colors.put(this.CUBE_COLORS);
         colors.position(0);
 
-        ByteBuffer bbFoundColors =
-                ByteBuffer.allocateDirect(this.CUBE_FOUND_COLORS.length * 4);
+        ByteBuffer bbFoundColors = ByteBuffer.allocateDirect(this.CUBE_FOUND_COLORS.length * 4);
         bbFoundColors.order(ByteOrder.nativeOrder());
         foundColors = bbFoundColors.asFloatBuffer();
         foundColors.put(this.CUBE_FOUND_COLORS);
