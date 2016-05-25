@@ -404,7 +404,7 @@ public class TreasureHuntActivityBIS
         public void run() {
           // Load texture
           if(feuille.indexPage==0)feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page1);
-          else feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page2);
+          else feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page8);
         }
       };
     }
