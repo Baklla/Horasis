@@ -22,7 +22,6 @@ public class Feuille extends ModelObject {
     public float[] sheetPosition;
     public FloatBuffer textures;
     public int textureParam;
-    public int image;
 
     public Context context;
 
@@ -33,7 +32,8 @@ public class Feuille extends ModelObject {
     private static final int COORDS_PER_POINT = 2;
 
     /** This is a handle to our texture data. */
-    private int mTextureDataHandle;
+    public int indexPage = 0;
+    public int image;
 
     public Feuille(Context context){
         super();
@@ -99,11 +99,32 @@ public class Feuille extends ModelObject {
     }
 
     public static int loadTexture(final Context context, final int resourceId) {
-        final int[] textureHandle = new int[1];
+        final int[] textureHandle = new int[2];
 
         GLES20.glGenTextures(1, textureHandle, 0);
 
         if (textureHandle[0] != 0)
+        {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false;   // No pre-scaling
+
+            // Read in the resource
+            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+
+            // Bind to the texture in OpenGL
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+
+            // Set filtering
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+
+            // Load the bitmap into the bound texture.
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+            // Recycle the bitmap, since its data has been loaded into OpenGL.
+            bitmap.recycle();
+        }
+        else if (textureHandle[1] != 0)
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;   // No pre-scaling
@@ -158,14 +179,12 @@ public class Feuille extends ModelObject {
         // Enable texture mapping
         //GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
-        // Load the texture
-        mTextureDataHandle = image;
         //GLES20.glDisable(GLES20.GL_TEXTURE_2D);
         // Set the active texture unit to texture unit 0.
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
         // Bind the texture to this unit.
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDataHandle);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, this.image);
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES20.glUniform1i(mTextureUniformHandle, 0);

@@ -368,7 +368,8 @@ public class TreasureHuntActivityBIS
     // Set modelView for the sheet, so we draw sheet in the correct location
     Matrix.multiplyMM(modelView, 0, view, 0, this.feuille.model, 0);
     Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    this.feuille.image = this.feuille.loadTexture(this, R.drawable.link_headphones_music);
+    if(this.feuille.indexPage==0)this.feuille.image = this.feuille.loadTexture(this, R.drawable.link_headphones_music);
+    else this.feuille.image = this.feuille.loadTexture(this, R.drawable.lol);
     this.feuille.draw(lightPosInEyeSpace,modelView,modelViewProjection,headView);
     checkGLError("Drawing sheet");
   }
@@ -384,8 +385,10 @@ public class TreasureHuntActivityBIS
     Log.i(TAG, "onCardboardTrigger");
 
     if (this.feuille.isLookingAtObject(modelView,headView)) {
-      this.feuille.image = this.feuille.loadTexture(this, R.drawable.lol);
-      this.feuille.draw(lightPosInEyeSpace,modelView,modelViewProjection,headView);
+      if(this.feuille.indexPage==0) this.feuille.indexPage++;
+      else this.feuille.indexPage--;
+      this.overlayView.show3DToast("Tu as bien cliqué sur l'image <3");
+      this.feuille.updateModelPosition(modelPosition, soundId, cardboardAudioEngine);
     }
     else{
       getCardboardView().resetHeadTracker();

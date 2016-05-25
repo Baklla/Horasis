@@ -88,8 +88,8 @@ public class CardboardOverlayView extends LinearLayout {
         setColor(Color.rgb(225, 225, 225));
         setVisibility(View.VISIBLE);
 
-        //mTextFadeAnimation = new AlphaAnimation(1.0f, 0.0f);
-        //mTextFadeAnimation.setDuration(2000);
+        mTextFadeAnimation = new AlphaAnimation(1.0f, 0.0f);
+        mTextFadeAnimation.setDuration(2000);
     }
 
     public void show3DToast(String message) {

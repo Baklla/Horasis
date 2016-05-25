@@ -63,4 +63,5 @@ public abstract class ModelObject {
      * @return true if the user is looking at the object.
      */
     public abstract boolean isLookingAtObject(float[] modelView, float[] headView);
+
 }
