@@ -52,6 +52,7 @@ public class RecyclerViewFolderPDF extends RecyclerView.Adapter<RecyclerViewFold
                 public void onClick(View v) {
                     Intent intent = new Intent(context, TreasureHuntActivityBIS.class);
                     intent.putExtra("PDFFile", document.getName());
+                    intent.putExtra("path", document.getPath());
                     context.startActivity(intent);
                 }
             });

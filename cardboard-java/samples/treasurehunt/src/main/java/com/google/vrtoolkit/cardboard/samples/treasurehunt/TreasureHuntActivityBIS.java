@@ -75,6 +75,9 @@ public class TreasureHuntActivityBIS
   private float[] modelViewProjection2;
   private float[] modelView2;
 
+  private float[] modelViewProjection3;
+  private float[] modelView3;
+
   private float[] modelPosition;
   private float[] headRotation;
 
@@ -86,9 +89,13 @@ public class TreasureHuntActivityBIS
   private CardboardAudioEngine cardboardAudioEngine;
   private volatile int soundId = CardboardAudioEngine.INVALID_ID;
 
+  private Conversion pdf;
+
   private Floor floor;
   private Table table;
   private Feuille feuille;
+
+  private InterfaceBtn btn;
 
   //Test PDFRenderer
   // create a new renderer
@@ -167,6 +174,8 @@ public class TreasureHuntActivityBIS
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    this.pdf = new Conversion(getIntent().getStringExtra("path"));
+
     setContentView(R.layout.common_ui);
 
     CardboardView cardboardView = (CardboardView) findViewById(R.id.cardboard_view);
@@ -184,6 +193,8 @@ public class TreasureHuntActivityBIS
     this.table = new Table();
     this.feuille = new Feuille(this);
 
+    this.btn = new InterfaceBtn(this);
+
     camera = new float[16];
     view = new float[16];
     modelViewProjection = new float[16];
@@ -191,6 +202,9 @@ public class TreasureHuntActivityBIS
 
     modelViewProjection2 = new float[16];
     modelView2 = new float[16];
+
+    modelViewProjection3 = new float[16];
+    modelView3 = new float[16];
 
     // Model first appears directly in front of user.
     modelPosition = new float[] {0.0f, -1.0f, -1.5f};
@@ -248,6 +262,9 @@ public class TreasureHuntActivityBIS
     this.table.make();
     this.feuille.make();
 
+    this.btn.make();
+    checkGLError("btn make program");
+
     int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
     int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
     int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
@@ -262,10 +279,13 @@ public class TreasureHuntActivityBIS
 
     int vertexShader2 = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.test_vertex_shader);
     int passthroughShader2 = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.test_fragment_shader);
-
     this.feuille.program(vertexShader2,passthroughShader2);
     checkGLError("Sheet program");
     checkGLError("Sheet program params");
+
+    this.btn.program(vertexShader2,passthroughShader2);
+    checkGLError("Btn program");
+    checkGLError("Btn program params");
 
     // Avoid any delays during start-up due to decoding of sound files.
     new Thread(
@@ -286,7 +306,11 @@ public class TreasureHuntActivityBIS
 
     this.table.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
     this.feuille.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
-    this.feuille.image = this.feuille.loadTexture(this, R.drawable.file_page1);
+    //pdf.render(this, this.feuille, this.feuille.image);
+    this.feuille.image = this.feuille.loadTexture(this, pdf.render());
+
+    this.btn.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
+    this.btn.image = this.btn.loadTexture(this, R.drawable.link_headphones_music);
 
     checkGLError("onSurfaceCreated");
   }
@@ -378,6 +402,13 @@ public class TreasureHuntActivityBIS
     Matrix.multiplyMM(modelViewProjection2, 0, perspective, 0, modelView2, 0);
     this.feuille.draw(lightPosInEyeSpace,modelView2,modelViewProjection2,headView);
     checkGLError("Drawing sheet");
+
+    // Set modelView for the sheet, so we draw sheet in the correct location
+    Matrix.multiplyMM(modelView3, 0, view, 0, this.btn.model, 0);
+    Matrix.multiplyMM(modelViewProjection3, 0, perspective, 0, modelView3, 0);
+    checkGLError("Drawing Btn before");
+    this.btn.draw(lightPosInEyeSpace,modelView3,modelViewProjection3,headView);
+    checkGLError("Drawing Btn");
   }
 
   @Override
@@ -403,8 +434,8 @@ public class TreasureHuntActivityBIS
         @Override
         public void run() {
           // Load texture
-          if(feuille.indexPage==0)feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page1);
-          else feuille.image = feuille.loadTexture(getBaseContext(), R.drawable.file_page8);
+          if(feuille.indexPage==0) feuille.image = feuille.loadTexture(getBaseContext(), pdf.render()); //pdf.render(getBaseContext(), feuille, feuille.image);
+          else feuille.image = feuille.loadTexture(getBaseContext(), pdf.render()); //pdf.render(getBaseContext(), feuille, feuille.image);
         }
       };
     }
