@@ -49,10 +49,10 @@ public class Conversion extends Observable {
         // TODO : voir comment bien initialiser ces valeurs
         // On peut essayer comme ça pour le moment.
 
-        Bitmap bitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_8888); // 400/72 *dim pour augmenter résolution
         bitmap.eraseColor(Color.WHITE);
         Rect rect = new Rect(0, 0, REQ_WIDTH, REQ_HEIGHT);
-        page.render(bitmap, rect, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
 
         //obj.loadTexture(context, bitmap);
         page.close();
