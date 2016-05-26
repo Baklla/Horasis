@@ -81,6 +81,7 @@ public class TreasureHuntActivityBIS
 
   private Conversion pdf;
 
+  private Murs murs;
   private Floor floor;
   private Table table;
   private Feuille feuille;
@@ -155,6 +156,7 @@ public class TreasureHuntActivityBIS
     });
     setCardboardView(cardboardView);
 
+    this.murs = new Murs();
     this.floor = new Floor();
     this.table = new Table();
     this.feuille = new Feuille(this);
@@ -215,6 +217,7 @@ public class TreasureHuntActivityBIS
     Log.i(TAG, "onSurfaceCreated");
     GLES20.glClearColor(0.1f, 0.1f, 0.1f, 0.5f); // Dark background so text shows up well.
 
+    this.murs.make();
     this.floor.make();
     this.table.make();
     this.feuille.make();
@@ -225,6 +228,10 @@ public class TreasureHuntActivityBIS
     int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
     int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
     int passthroughShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.passthrough_fragment);
+
+    this.murs.program(vertexShader,passthroughShader);
+    checkGLError("Floor program");
+    checkGLError("Floor program params");
 
     this.floor.program(vertexShader,gridShader);
     checkGLError("Floor program");
@@ -265,6 +272,8 @@ public class TreasureHuntActivityBIS
             })
         .start();
     */
+
+    this.murs.updateModelPosition(this.murs.modelPosition,soundId,cardboardAudioEngine);
 
     this.table.updateModelPosition(this.table.modelPosition,soundId,cardboardAudioEngine);
 
@@ -356,6 +365,12 @@ public class TreasureHuntActivityBIS
     this.table.draw(lightPosInEyeSpace,this.table.modelView,this.table.modelViewProjection,headView);
     checkGLError("Drawing cube");
 
+    // Set modelView for the walls, so we draw walls in the correct location
+    /*Matrix.multiplyMM(this.murs.modelView, 0, view, 0, this.murs.model, 0);
+    Matrix.multiplyMM(this.murs.modelViewProjection, 0, perspective, 0, this.murs.modelView, 0);
+    this.murs.draw(lightPosInEyeSpace,this.murs.modelView,this.murs.modelViewProjection,headView);
+    checkGLError("Drawing walls");*/
+
     // Set modelView for the floor, so we draw floor in the correct location
     Matrix.multiplyMM(this.floor.modelView, 0, view, 0, this.floor.model, 0);
     Matrix.multiplyMM(this.floor.modelViewProjection, 0, perspective, 0, this.floor.modelView, 0);
@@ -424,7 +439,7 @@ public class TreasureHuntActivityBIS
     }
     else{
       this.overlayView.show3DToast("Looking at Nothing");
-      //getCardboardView().resetHeadTracker();
+      getCardboardView().resetHeadTracker();
     }
 
     //this.overlayView.show3DToast("currentPage : " + String.valueOf(this.pdf.currentPage) + " / isOnTable : " + String.valueOf(this.feuille.isOnTable));

@@ -9,70 +9,75 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Created by Quentin on 21/05/2016.
+ * Created by Quentin on 27/05/2016.
  */
-public class Floor extends ModelObject {
+public class Murs extends ModelObject {
 
-    public float floorDepth;
-
-    public Floor(){
+    public Murs(){
         super();
-        floorDepth = 20f;
+        modelPosition = new float[] {0.0f, -1.0f, 0.0f};
     }
 
     @Override
     public void make(){
         // make a floor
-        ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(this.FLOOR_COORDS.length * 4);
+        ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(this.MURS_COORDS.length * 4);
         bbFloorVertices.order(ByteOrder.nativeOrder());
         vertices = bbFloorVertices.asFloatBuffer();
-        vertices.put(this.FLOOR_COORDS);
+        vertices.put(this.MURS_COORDS);
         vertices.position(0);
 
-        ByteBuffer bbFloorNormals = ByteBuffer.allocateDirect(this.FLOOR_NORMALS.length * 4);
+        ByteBuffer bbFloorNormals = ByteBuffer.allocateDirect(this.MURS_NORMALS.length * 4);
         bbFloorNormals.order(ByteOrder.nativeOrder());
         normals = bbFloorNormals.asFloatBuffer();
-        normals.put(this.FLOOR_NORMALS);
+        normals.put(this.MURS_NORMALS);
         normals.position(0);
 
-        ByteBuffer bbFloorColors = ByteBuffer.allocateDirect(this.FLOOR_COLORS.length * 4);
+        ByteBuffer bbFloorColors = ByteBuffer.allocateDirect(this.MURS_COLORS.length * 4);
         bbFloorColors.order(ByteOrder.nativeOrder());
         colors = bbFloorColors.asFloatBuffer();
-        colors.put(this.FLOOR_COLORS);
+        colors.put(this.MURS_COLORS);
         colors.position(0);
     }
 
     @Override
-    public void program(int vertexShader, int gridShader){
+    public void program(int vertexShader, int passthroughShader){
         program = GLES20.glCreateProgram();
         GLES20.glAttachShader(program, vertexShader);
-        GLES20.glAttachShader(program, gridShader);
+        GLES20.glAttachShader(program, passthroughShader);
         GLES20.glLinkProgram(program);
         GLES20.glUseProgram(program);
 
-        //checkGLError("Floor program");
+        //checkGLError("Cube program");
+
+        positionParam = GLES20.glGetAttribLocation(program, "a_Position");
+        normalParam = GLES20.glGetAttribLocation(program, "a_Normal");
+        colorParam = GLES20.glGetAttribLocation(program, "a_Color");
 
         modelParam = GLES20.glGetUniformLocation(program, "u_Model");
         modelViewParam = GLES20.glGetUniformLocation(program, "u_MVMatrix");
         modelViewProjectionParam = GLES20.glGetUniformLocation(program, "u_MVP");
         lightPosParam = GLES20.glGetUniformLocation(program, "u_LightPos");
 
-        positionParam = GLES20.glGetAttribLocation(program, "a_Position");
-        normalParam = GLES20.glGetAttribLocation(program, "a_Normal");
-        colorParam = GLES20.glGetAttribLocation(program, "a_Color");
-
         GLES20.glEnableVertexAttribArray(positionParam);
         GLES20.glEnableVertexAttribArray(normalParam);
         GLES20.glEnableVertexAttribArray(colorParam);
 
-        //checkGLError("Floor program params");
-
-        Matrix.setIdentityM(model, 0);
-        Matrix.translateM(model, 0, 0, -floorDepth, 0); // Floor appears below user.
+        //checkGLError("Cube program params");
     }
 
     @Override
-    public void updateModelPosition(float[] modelPosition, int soundId, CardboardAudioEngine cardboardAudioEngine) {}
+    public void updateModelPosition(float[] modelPosition, int soundId, CardboardAudioEngine cardboardAudioEngine) {
+        Matrix.setIdentityM(model,0);
+        Matrix.translateM(model, 0, modelPosition[0], modelPosition[1], modelPosition[2]);
+
+        // Update the sound location to match it with the new cube position.
+        if (soundId != CardboardAudioEngine.INVALID_ID) {
+            cardboardAudioEngine.setSoundObjectPosition(
+                    soundId, modelPosition[0], modelPosition[1], modelPosition[2]);
+        }
+        //checkGLError("updateCubePosition");
+    }
 
     @Override
     public void draw(float[] lightPosInEyeSpace, float[] modelView, float[] modelViewProjection, float[] headView) {
@@ -87,49 +92,62 @@ public class Floor extends ModelObject {
         GLES20.glVertexAttribPointer(normalParam, 3, GLES20.GL_FLOAT, false, 0, normals);
         GLES20.glVertexAttribPointer(colorParam, 4, GLES20.GL_FLOAT, false, 0, colors);
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 24);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 30);
     }
 
     @Override
     public boolean isLookingAtObject(float[] headView) { return false; }
 
-    // The grid lines on the floor are rendered procedurally and large polygons cause floating point
-    // precision problems on some architectures. So we split the floor into 4 quadrants.
-    public static final float[] FLOOR_COORDS = new float[] {
-            // +X, +Z quadrant
-            200, 0, 0,
-            0, 0, 0,
-            0, 0, 200,
-            200, 0, 0,
-            0, 0, 200,
-            200, 0, 200,
+    public static final float[] MURS_COORDS = new float[] {
+            // Front face
+            -5.0f, 3.0f, -5.0f,
+            -5.0f, 0.0f, -5.0f,
+            5.0f, 3.0f, -5.0f,
+            -5.0f, 0.0f, -5.0f,
+            5.0f, 0.0f, -5.0f,
+            5.0f, 3.0f, -5.0f,
 
-            // -X, +Z quadrant
-            0, 0, 0,
-            -200, 0, 0,
-            -200, 0, 200,
-            0, 0, 0,
-            -200, 0, 200,
-            0, 0, 200,
+            // Top Face
+            -5.0f, 3.0f, -5.0f,
+            -5.0f, 3.0f, 5.0f,
+            5.0f, 3.0f, -5.0f,
+            -5.0f, 3.0f, 5.0f,
+            5.0f, 3.0f, 5.0f,
+            5.0f, 3.0f, -5.0f,
 
-            // +X, -Z quadrant
-            200, 0, -200,
-            0, 0, -200,
-            0, 0, 0,
-            200, 0, -200,
-            0, 0, 0,
-            200, 0, 0,
+            // Right face
+            5.0f, 3.0f, -5.0f,
+            5.0f, 0.0f, -5.0f,
+            5.0f, 3.0f, 5.0f,
+            5.0f, 0.0f, -5.0f,
+            5.0f, 0.0f, 5.0f,
+            5.0f, 3.0f, 5.0f,
 
-            // -X, -Z quadrant
-            0, 0, -200,
-            -200, 0, -200,
-            -200, 0, 0,
-            0, 0, -200,
-            -200, 0, 0,
-            0, 0, 0,
+            // Left face
+            -5.0f, 3.0f, 5.0f,
+            -5.0f, 0.0f, 5.0f,
+            -5.0f, 3.0f, -5.0f,
+            -5.0f, 0.0f, 5.0f,
+            -5.0f, 0.0f, -5.0f,
+            -5.0f, 3.0f, -5.0f,
+
+            // Back face
+            -5.0f, 3.0f, 5.0f,
+            -5.0f, 0.0f, 5.0f,
+            5.0f, 3.0f, 5.0f,
+            -5.0f, 0.0f, 5.0f,
+            5.0f, 0.0f, 5.0f,
+            5.0f, 3.0f, 5.0f,
     };
 
-    public static final float[] FLOOR_NORMALS = new float[] {
+    public static final float[] MURS_NORMALS = new float[] {
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+
             0.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
@@ -159,7 +177,14 @@ public class Floor extends ModelObject {
             0.0f, 1.0f, 0.0f,
     };
 
-    public static final float[] FLOOR_COLORS = new float[] {
+    public static final float[] MURS_COLORS = new float[] {
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+
             1.0f, 1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f,
@@ -188,5 +213,4 @@ public class Floor extends ModelObject {
             1.0f, 1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f,
     };
-
 }
