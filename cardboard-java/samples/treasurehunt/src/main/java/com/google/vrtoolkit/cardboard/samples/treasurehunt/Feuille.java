@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 
@@ -41,7 +42,7 @@ public class Feuille extends ModelObject {
     public Feuille(Context context){
         super();
         this.context=context;
-        sheetPosition = new float[] {0.0f, -1.0f, -1.5f};
+        modelPosition = new float[] {0.0f, -0.789f, -1.5f};
     }
 
     @Override
@@ -106,7 +107,6 @@ public class Feuille extends ModelObject {
         GLES20.glEnableVertexAttribArray(textureParam);
         //checkGLError("Sheet program params");
     }
-
 
     public static int loadTexture(final Context context, Bitmap bitmap) {
         final int[] textureHandle = new int[1];
@@ -236,7 +236,7 @@ public class Feuille extends ModelObject {
     }
 
     @Override
-    public boolean isLookingAtObject(float[] modelView, float[] headView) {
+    public boolean isLookingAtObject(float[] headView) {
         float[] initVec = {0, 0, 0, 1.0f};
         float[] objPositionVec = new float[4];
 
@@ -246,6 +246,8 @@ public class Feuille extends ModelObject {
 
         float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
         float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
+
+        Log.i("FEUILLE", String.valueOf(Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT));
 
         return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
     }
@@ -258,12 +260,12 @@ public class Feuille extends ModelObject {
           0.5f, 0.2f, -1.0f,
           0.5f, 2.2f, -1.0f,*/
 
-            -0.5f, 0.211f, -0.7f,
-            -0.5f, 0.211f, 0.9f,
-            0.5f, 0.211f, -0.7f,
-            -0.5f, 0.211f, 0.9f,
-            0.5f, 0.211f, 0.9f,
-            0.5f, 0.211f, -0.7f,
+            -0.5f, 0.0f, -0.7f,
+            -0.5f, 0.0f, 0.9f,
+            0.5f, 0.0f, -0.7f,
+            -0.5f, 0.0f, 0.9f,
+            0.5f, 0.0f, 0.9f,
+            0.5f, 0.0f, -0.7f,
     };
 
     public static final float[] SHEET_COORDS = new float[] {

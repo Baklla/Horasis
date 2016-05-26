@@ -175,7 +175,8 @@ public class CardboardOverlayView extends LinearLayout {
 
             // The fraction of this ViewGroup's height by which we shift the image off the ViewGroup's
             // center. Positive values shift downwards, negative values shift upwards.
-            final float verticalImageOffset = -0.02f;
+            //final float verticalImageOffset = -0.02f;
+            final float verticalImageOffset = 0.0f;
 
             // Vertical position of the text, specified in fractions of this ViewGroup's height.
             final float verticalTextPos = 0.52f;

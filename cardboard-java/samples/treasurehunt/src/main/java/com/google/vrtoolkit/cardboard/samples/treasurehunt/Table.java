@@ -2,6 +2,7 @@ package com.google.vrtoolkit.cardboard.samples.treasurehunt;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 
@@ -18,6 +19,8 @@ public class Table extends ModelObject {
 
     public Table(){
         super();
+        // Model first appears directly in front of user.
+        modelPosition = new float[] {0.0f, -1.0f, -1.5f};
     }
 
     @Override
@@ -108,14 +111,14 @@ public class Table extends ModelObject {
         // Set the normal positions of the cube, again for shading
         GLES20.glVertexAttribPointer(normalParam, 3, GLES20.GL_FLOAT, false, 0, normals);
         GLES20.glVertexAttribPointer(colorParam, 4, GLES20.GL_FLOAT, false, 0,
-                isLookingAtObject(modelView,headView) ? foundColors : colors);
+                isLookingAtObject(headView) ? foundColors : colors);
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 10*6);
         //checkGLError("Drawing cube");
     }
 
     @Override
-    public boolean isLookingAtObject(float[] modelView, float[] headView) {
+    public boolean isLookingAtObject(float[] headView) {
         float[] initVec = {0, 0, 0, 1.0f};
         float[] objPositionVec = new float[4];
 

@@ -17,11 +17,12 @@ import java.util.Observable;
 
 public class Conversion extends Observable {
 
-    private PdfRenderer renderer;
-    private int currentPage = 0;
-    private int nbPage;
-    private int zoomvar = 4;
-    private boolean visible = false;
+    public PdfRenderer renderer;
+    public int currentPage = 0;
+    public int nbPage;
+    public int zoomvar = 4;
+    public boolean visible = false;
+    public boolean hasChanged = false;
 
     // TODO : Le path est a récuppérer via un intent
     // private String path;
@@ -49,9 +50,9 @@ public class Conversion extends Observable {
         // TODO : voir comment bien initialiser ces valeurs
         // On peut essayer comme ça pour le moment.
 
-        Bitmap bitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_8888); // 400/72 *dim pour augmenter résolution
+        Bitmap bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888); // 400/72 *dim pour augmenter résolution
         bitmap.eraseColor(Color.WHITE);
-        Rect rect = new Rect(0, 0, REQ_WIDTH, REQ_HEIGHT);
+        Rect rect = new Rect(0, 0, 1080, 1080);
         page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
 
         //obj.loadTexture(context, bitmap);
@@ -59,16 +60,20 @@ public class Conversion extends Observable {
         return bitmap;
     }
 
-    public boolean CanTurnNext() {
-        return currentPage < nbPage;
+    public boolean canTurnNext() {
+        return currentPage+1 < nbPage;
     }
 
-    public boolean CanTurnPrevious() {
-        return currentPage > nbPage;
+    public boolean canTurnPrevious() {
+        return currentPage-1 >= 0;
     }
 
-    public boolean NextPage() {
-        if (CanTurnNext()){
+    public boolean currentPageHasChanged() {
+        return hasChanged;
+    }
+
+    public boolean nextPage() {
+        if (canTurnNext()){
             currentPage++;
             this.setChanged();
             return true;
@@ -77,8 +82,8 @@ public class Conversion extends Observable {
         return false;
     }
 
-    public boolean PreviousPage() {
-        if (CanTurnPrevious()){
+    public boolean previousPage() {
+        if (canTurnPrevious()){
             currentPage--;
             this.setChanged();
             return true;
@@ -87,11 +92,11 @@ public class Conversion extends Observable {
         return false;
     }
 
-    public int GetActivePage() {
+    public int getActivePage() {
         return currentPage;
     }
 
-    public boolean Hide() {
+    public boolean hide() {
         /*
          * On cache l'interface
          */
@@ -105,7 +110,7 @@ public class Conversion extends Observable {
 
     }
 
-    public boolean Show() {
+    public boolean show() {
         /*
          * On montre l'interface
          */
@@ -118,7 +123,7 @@ public class Conversion extends Observable {
         return false;
     }
 
-    public boolean Zoom() {
+    public boolean zoom() {
         /*
          * On zoom l'interface
          */
@@ -131,7 +136,7 @@ public class Conversion extends Observable {
         return false;
     }
 
-    public boolean Unzoom() {
+    public boolean unzoom() {
         /*
          * On dezoom l'interface
          */

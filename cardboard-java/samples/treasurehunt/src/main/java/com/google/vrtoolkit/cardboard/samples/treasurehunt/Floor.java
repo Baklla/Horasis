@@ -92,7 +92,7 @@ public class Floor extends ModelObject {
     }
 
     @Override
-    public boolean isLookingAtObject(float[] modelView, float[] headView) { return true; }
+    public boolean isLookingAtObject(float[] headView) { return true; }
 
     // The grid lines on the floor are rendered procedurally and large polygons cause floating point
     // precision problems on some architectures. So we split the floor into 4 quadrants.

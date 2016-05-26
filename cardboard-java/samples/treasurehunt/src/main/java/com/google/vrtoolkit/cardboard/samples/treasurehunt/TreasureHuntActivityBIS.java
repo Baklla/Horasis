@@ -68,17 +68,7 @@ public class TreasureHuntActivityBIS
   private float[] camera;
   private float[] view;
   private float[] headView;
-  private float[] modelViewProjection;
-  private float[] modelView;
 
-
-  private float[] modelViewProjection2;
-  private float[] modelView2;
-
-  private float[] modelViewProjection3;
-  private float[] modelView3;
-
-  private float[] modelPosition;
   private float[] headRotation;
 
   private float objectDistance = MAX_MODEL_DISTANCE / 2.0f;
@@ -95,32 +85,8 @@ public class TreasureHuntActivityBIS
   private Table table;
   private Feuille feuille;
 
-  private InterfaceBtn btn;
-
-  //Test PDFRenderer
-  // create a new renderer
- /* Bitmap mBitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_4444);
-
-  PdfRenderer renderer = new PdfRenderer(ParcelFileDescriptor.
-          open(new File(getIntent().getStringExtra("PDFFile")),
-                  ParcelFileDescriptor.MODE_READ_ONLY));
-
-  // let us just render all pages
-  final int pageCount = renderer.getPageCount();
-  for(int i = 0; i < pageCount; i++) {
-    PdfRenderer.Page page = renderer.openPage(i);
-
-    // say we render for showing on the screen
-    page.render(mBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-
-    // do stuff with the bitmap
-
-    // close the page
-    page.close();
-  }
-
-  // close the renderer
-  renderer.close();*/
+  private InterfaceBtn btnNext;
+  private InterfaceBtn btnPrevious;
 
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -193,21 +159,12 @@ public class TreasureHuntActivityBIS
     this.table = new Table();
     this.feuille = new Feuille(this);
 
-    this.btn = new InterfaceBtn(this);
+    this.btnNext = new ButtonNext(this);
+    this.btnPrevious = new ButtonPrevious(this);
 
     camera = new float[16];
     view = new float[16];
-    modelViewProjection = new float[16];
-    modelView = new float[16];
 
-    modelViewProjection2 = new float[16];
-    modelView2 = new float[16];
-
-    modelViewProjection3 = new float[16];
-    modelView3 = new float[16];
-
-    // Model first appears directly in front of user.
-    modelPosition = new float[] {0.0f, -1.0f, -1.5f};
     //modelPosition = new float[] {0.0f, 0.0f, -MAX_MODEL_DISTANCE / 2.0f};
     headRotation = new float[4];
     headView = new float[16];
@@ -261,9 +218,9 @@ public class TreasureHuntActivityBIS
     this.floor.make();
     this.table.make();
     this.feuille.make();
-
-    this.btn.make();
-    checkGLError("btn make program");
+    this.btnNext.make();
+    this.btnPrevious.make();
+    checkGLError("Objects makes");
 
     int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
     int gridShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, R.raw.grid_fragment);
@@ -283,10 +240,14 @@ public class TreasureHuntActivityBIS
     checkGLError("Sheet program");
     checkGLError("Sheet program params");
 
-    this.btn.program(vertexShader2,passthroughShader2);
-    checkGLError("Btn program");
-    checkGLError("Btn program params");
+    this.btnNext.program(vertexShader2,passthroughShader2);
+    checkGLError("BtnNext program");
+    checkGLError("BtnNext program params");
 
+    this.btnPrevious.program(vertexShader2,passthroughShader2);
+    checkGLError("BtnPrevious program");
+    checkGLError("BtnPrevious program params");
+/*
     // Avoid any delays during start-up due to decoding of sound files.
     new Thread(
             new Runnable() {
@@ -299,18 +260,22 @@ public class TreasureHuntActivityBIS
                 soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
                 cardboardAudioEngine.setSoundObjectPosition(
                     soundId, modelPosition[0], modelPosition[1], modelPosition[2]);
-                cardboardAudioEngine.playSound(soundId, true /* looped playback */);
+                cardboardAudioEngine.playSound(soundId, true /* looped playback *//*);
               }
             })
         .start();
+    */
 
-    this.table.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
-    this.feuille.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
-    //pdf.render(this, this.feuille, this.feuille.image);
+    this.table.updateModelPosition(this.table.modelPosition,soundId,cardboardAudioEngine);
+
+    this.feuille.updateModelPosition(this.feuille.modelPosition,soundId,cardboardAudioEngine);
     this.feuille.image = this.feuille.loadTexture(this, pdf.render());
 
-    this.btn.updateModelPosition(modelPosition,soundId,cardboardAudioEngine);
-    this.btn.image = this.btn.loadTexture(this, R.drawable.link_headphones_music);
+    this.btnNext.updateModelPosition(this.btnNext.modelPosition,soundId,cardboardAudioEngine);
+    this.btnNext.image = this.btnNext.loadTexture(this, R.drawable.button_next);
+
+    this.btnPrevious.updateModelPosition(this.btnPrevious.modelPosition,soundId,cardboardAudioEngine);
+    this.btnPrevious.image = this.btnPrevious.loadTexture(this, R.drawable.button_previous);
 
     checkGLError("onSurfaceCreated");
   }
@@ -386,33 +351,44 @@ public class TreasureHuntActivityBIS
     // Build the ModelView and ModelViewProjection matrices
     // for calculating cube position and light.
     float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-    Matrix.multiplyMM(modelView, 0, view, 0, this.table.model, 0);
-    Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    this.table.draw(lightPosInEyeSpace,modelView,modelViewProjection,headView);
+    Matrix.multiplyMM(this.table.modelView, 0, view, 0, this.table.model, 0);
+    Matrix.multiplyMM(this.table.modelViewProjection, 0, perspective, 0, this.table.modelView, 0);
+    this.table.draw(lightPosInEyeSpace,this.table.modelView,this.table.modelViewProjection,headView);
     checkGLError("Drawing cube");
 
     // Set modelView for the floor, so we draw floor in the correct location
-    Matrix.multiplyMM(modelView, 0, view, 0, this.floor.model, 0);
-    Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    this.floor.draw(lightPosInEyeSpace,modelView,modelViewProjection,headView);
+    Matrix.multiplyMM(this.floor.modelView, 0, view, 0, this.floor.model, 0);
+    Matrix.multiplyMM(this.floor.modelViewProjection, 0, perspective, 0, this.floor.modelView, 0);
+    this.floor.draw(lightPosInEyeSpace,this.floor.modelView,this.floor.modelViewProjection,headView);
     checkGLError("Drawing floor");
 
     // Set modelView for the sheet, so we draw sheet in the correct location
-    Matrix.multiplyMM(modelView2, 0, view, 0, this.feuille.model, 0);
-    Matrix.multiplyMM(modelViewProjection2, 0, perspective, 0, modelView2, 0);
-    this.feuille.draw(lightPosInEyeSpace,modelView2,modelViewProjection2,headView);
+    Matrix.multiplyMM(this.feuille.modelView, 0, view, 0, this.feuille.model, 0);
+    Matrix.multiplyMM(this.feuille.modelViewProjection, 0, perspective, 0, this.feuille.modelView, 0);
+    // Load texture
+    if(this.pdf.currentPageHasChanged()){
+      feuille.image = feuille.loadTexture(this, pdf.render()); //pdf.render(getBaseContext(), feuille, feuille.image);
+      this.pdf.hasChanged = false;
+    }
+    this.feuille.draw(lightPosInEyeSpace,this.feuille.modelView,this.feuille.modelViewProjection,headView);
     checkGLError("Drawing sheet");
 
     // Set modelView for the sheet, so we draw sheet in the correct location
-    Matrix.multiplyMM(modelView3, 0, view, 0, this.btn.model, 0);
-    Matrix.multiplyMM(modelViewProjection3, 0, perspective, 0, modelView3, 0);
-    checkGLError("Drawing Btn before");
-    this.btn.draw(lightPosInEyeSpace,modelView3,modelViewProjection3,headView);
-    checkGLError("Drawing Btn");
+    Matrix.multiplyMM(this.btnNext.modelView, 0, view, 0, this.btnNext.model, 0);
+    Matrix.multiplyMM(this.btnNext.modelViewProjection, 0, perspective, 0, this.btnNext.modelView, 0);
+    this.btnNext.draw(lightPosInEyeSpace,this.btnNext.modelView,this.btnNext.modelViewProjection,headView);
+    checkGLError("Drawing BtnNext");
+
+    // Set modelView for the sheet, so we draw sheet in the correct location
+    Matrix.multiplyMM(this.btnPrevious.modelView, 0, view, 0, this.btnPrevious.model, 0);
+    Matrix.multiplyMM(this.btnPrevious.modelViewProjection, 0, perspective, 0, this.btnPrevious.modelView, 0);
+    this.btnPrevious.draw(lightPosInEyeSpace,this.btnPrevious.modelView,this.btnPrevious.modelViewProjection,headView);
+    checkGLError("Drawing BtnPrevious");
   }
 
   @Override
   public void onFinishFrame(Viewport viewport) {}
+
 
   /**
    * Called when the Cardboard trigger is pulled.
@@ -421,27 +397,37 @@ public class TreasureHuntActivityBIS
   public void onCardboardTrigger() {
     Log.i(TAG, "onCardboardTrigger");
 
-    if (this.feuille.isLookingAtObject(modelView2,headView)) {
-      if(this.feuille.indexPage==0) this.feuille.indexPage++;
-      else this.feuille.indexPage--;
+    if (this.feuille.isLookingAtObject(headView)) {
+      this.overlayView.show3DToast("Looking at Feuille");
+      if(this.feuille.isOnTable()){
+        this.feuille.isOnTable=false;
+        this.btnNext.isOnTable=false;
+        this.btnPrevious.isOnTable=false;
+      }
+      else{
+        this.feuille.isOnTable=true;
+        this.btnNext.isOnTable=true;
+        this.btnPrevious.isOnTable=true;
+      }
+      this.feuille.updateModelPosition(this.feuille.modelPosition,soundId,cardboardAudioEngine);
+      this.btnNext.updateModelPosition(this.btnNext.modelPosition,soundId,cardboardAudioEngine);
+      this.btnPrevious.updateModelPosition(this.btnPrevious.modelPosition,soundId,cardboardAudioEngine);
+    }
+    else if (this.btnNext.isLookingAtObject(headView)) {
+      this.overlayView.show3DToast("Looking at BtnNext");
+      if(this.pdf.nextPage()) this.pdf.hasChanged=true;
 
-      if(this.feuille.isOnTable()) this.feuille.isOnTable=false;
-      else this.feuille.isOnTable=true;
-
-      this.overlayView.show3DToast("indexPage : " + String.valueOf(this.feuille.indexPage) + " / isOnTable : " + String.valueOf(this.feuille.isOnTable));
-
-      new Runnable(){
-        @Override
-        public void run() {
-          // Load texture
-          if(feuille.indexPage==0) feuille.image = feuille.loadTexture(getBaseContext(), pdf.render()); //pdf.render(getBaseContext(), feuille, feuille.image);
-          else feuille.image = feuille.loadTexture(getBaseContext(), pdf.render()); //pdf.render(getBaseContext(), feuille, feuille.image);
-        }
-      };
+    }
+    else if (this.btnPrevious.isLookingAtObject(headView)) {
+      this.overlayView.show3DToast("Looking at BtnPrevious");
+      if(this.pdf.previousPage()) this.pdf.hasChanged=true;
     }
     else{
-      getCardboardView().resetHeadTracker();
+      this.overlayView.show3DToast("Looking at Nothing");
+      //getCardboardView().resetHeadTracker();
     }
+
+    //this.overlayView.show3DToast("currentPage : " + String.valueOf(this.pdf.currentPage) + " / isOnTable : " + String.valueOf(this.feuille.isOnTable));
 
     // Always give user feedback.
     vibrator.vibrate(50);

@@ -30,11 +30,17 @@ public abstract class ModelObject {
 
     public float[] model;
 
+    public float[] modelViewProjection;
+    public float[] modelView;
+    public float[] modelPosition;
+
     /**
      * Constructor.
      */
     public ModelObject(){
         model = new float[16];
+        modelViewProjection = new float[16];
+        modelView = new float[16];
     }
 
     /**
@@ -62,6 +68,6 @@ public abstract class ModelObject {
      *
      * @return true if the user is looking at the object.
      */
-    public abstract boolean isLookingAtObject(float[] modelView, float[] headView);
+    public abstract boolean isLookingAtObject(float[] headView);
 
 }

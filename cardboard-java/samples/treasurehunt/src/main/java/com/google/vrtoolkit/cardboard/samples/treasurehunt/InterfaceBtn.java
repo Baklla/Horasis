@@ -4,9 +4,11 @@ package com.google.vrtoolkit.cardboard.samples.treasurehunt;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 
@@ -18,47 +20,14 @@ import java.nio.FloatBuffer;
 /**
  * Created by anthonygriffon on 25/05/2016.
  */
-public class InterfaceBtn extends ModelObject {
-
-    public static final float[] BTN_COORDS = new float[] {
-            -1.0f, 0.211f, -0.7f,
-            -1.0f, 0.211f, 0.9f,
-            0.0f, 0.211f, -0.7f,
-            -1.0f, 0.211f, 0.9f,
-            0.0f, 0.211f, 0.9f,
-            0.0f, 0.211f, -0.7f,
-    };
-
-    public static final float[] BTN_NORMALS = new float[] {
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-    };
-
-    public static final float[] BTN_COLORS = new float[] {
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-    };
-
-    public static final float[] BTN_TEXTURES = new float[] {
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f
-    };
+public abstract class InterfaceBtn extends ModelObject {
 
     public FloatBuffer textures;
     public int textureParam;
     public int image;
+    public FloatBuffer verticesOnTable;
+
+    public boolean isOnTable = true;
 
     public Context context;
 
@@ -79,6 +48,12 @@ public class InterfaceBtn extends ModelObject {
     @Override
     public void make() {
         // make a button
+        ByteBuffer bbverticesontable = ByteBuffer.allocateDirect(this.BTN_COORDS_ON_TABLE.length * 4);
+        bbverticesontable.order(ByteOrder.nativeOrder());
+        verticesOnTable = bbverticesontable.asFloatBuffer();
+        verticesOnTable.put(this.BTN_COORDS_ON_TABLE);
+        verticesOnTable.position(0);
+
         ByteBuffer bbvertices = ByteBuffer.allocateDirect(this.BTN_COORDS.length * 4);
         bbvertices.order(ByteOrder.nativeOrder());
         vertices = bbvertices.asFloatBuffer();
@@ -130,7 +105,9 @@ public class InterfaceBtn extends ModelObject {
         GLES20.glEnableVertexAttribArray(textureParam);
     }
 
-
+    public boolean isOnTable() {
+        return isOnTable;
+    }
 
     @Override
     public void updateModelPosition(float[] modelPosition, int soundId, CardboardAudioEngine cardboardAudioEngine) {
@@ -187,7 +164,7 @@ public class InterfaceBtn extends ModelObject {
         // GLES20.glUniformMatrix4fv(modelParam, 1, false, model, 0);
         GLES20.glUniformMatrix4fv(modelViewParam, 1, false, modelView, 0);
         GLES20.glUniformMatrix4fv(modelViewProjectionParam, 1, false, modelViewProjection, 0);
-        GLES20.glVertexAttribPointer(positionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertices);
+        GLES20.glVertexAttribPointer(positionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, isOnTable() ? verticesOnTable : vertices);
         GLES20.glVertexAttribPointer(normalParam, 3, GLES20.GL_FLOAT, false, 0, normals);
         GLES20.glVertexAttribPointer(colorParam, 4, GLES20.GL_FLOAT, false, 0, colors);
         GLES20.glVertexAttribPointer(textureParam, COORDS_PER_POINT, GLES20.GL_FLOAT, false, 0, textures);
@@ -195,7 +172,7 @@ public class InterfaceBtn extends ModelObject {
     }
 
     @Override
-    public boolean isLookingAtObject(float[] modelView, float[] headView) {
+    public boolean isLookingAtObject(float[] headView) {
         float[] initVec = {0, 0, 0, 1.0f};
         float[] objPositionVec = new float[4];
 
@@ -206,6 +183,52 @@ public class InterfaceBtn extends ModelObject {
         float pitch = (float) Math.atan2(objPositionVec[1], -objPositionVec[2]);
         float yaw = (float) Math.atan2(objPositionVec[0], -objPositionVec[2]);
 
+        Log.i("BUTTON", String.valueOf(Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT));
+
         return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
     }
+
+    public static final float[] BTN_COORDS_ON_TABLE = new float[] {
+            -0.25f, 0.25f, -0.7f,
+            -0.25f, -0.25f, -0.7f,
+            0.25f, 0.25f, -0.7f,
+            -0.25f, -0.25f, -0.7f,
+            0.25f, -0.25f, -0.7f,
+            0.25f, 0.25f, -0.7f,
+    };
+    public static final float[] BTN_COORDS = new float[] {
+            -0.25f, 0.25f, 2.1f,
+            -0.25f, -0.25f, 2.1f,
+            0.25f, 0.25f, 2.1f,
+            -0.25f, -0.25f, 2.1f,
+            0.25f, -0.25f, 2.1f,
+            0.25f, 0.25f, 2.1f,
+    };
+
+    public static final float[] BTN_NORMALS = new float[] {
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+    };
+
+    public static final float[] BTN_COLORS = new float[] {
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+    };
+
+    public static final float[] BTN_TEXTURES = new float[] {
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f
+    };
 }
