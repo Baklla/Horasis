@@ -1,4 +1,4 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager;
 
 /**
  * Created by Quentin on 10/05/2016.

@@ -1,4 +1,4 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -6,6 +6,10 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
+
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager.FolderOrPDF;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager.RecyclerViewFolderPDF;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 import java.io.File;
 import java.util.ArrayList;

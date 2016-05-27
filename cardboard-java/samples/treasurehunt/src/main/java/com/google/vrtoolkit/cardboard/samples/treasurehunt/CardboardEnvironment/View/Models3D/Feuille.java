@@ -1,8 +1,7 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
@@ -10,7 +9,6 @@ import android.util.Log;
 
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;

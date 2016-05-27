@@ -1,4 +1,4 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.TreasureHuntActivityBIS;
 
 import java.util.ArrayList;
 

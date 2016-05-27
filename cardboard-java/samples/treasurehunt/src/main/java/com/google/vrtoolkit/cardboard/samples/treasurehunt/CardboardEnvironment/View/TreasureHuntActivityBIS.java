@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -29,6 +29,15 @@ import com.google.vrtoolkit.cardboard.Eye;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.Model.Conversion;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonNext;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonPrevious;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Feuille;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Floor;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.InterfaceBtn;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Murs;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Table;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;

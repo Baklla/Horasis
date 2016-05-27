@@ -1,4 +1,4 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D;
 
 import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 

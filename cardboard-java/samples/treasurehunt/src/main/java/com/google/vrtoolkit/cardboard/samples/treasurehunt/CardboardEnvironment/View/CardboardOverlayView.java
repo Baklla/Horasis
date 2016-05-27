@@ -14,17 +14,12 @@
         * limitations under the License.
 */
 
-        package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+        package com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View;
 
         import android.content.Context;
-        import android.graphics.Bitmap;
         import android.graphics.Color;
         import android.graphics.Typeface;
-        import android.graphics.pdf.PdfRenderer;
-        import android.os.Environment;
-        import android.os.ParcelFileDescriptor;
         import android.util.AttributeSet;
-        import android.util.Log;
         import android.util.TypedValue;
         import android.view.Gravity;
         import android.view.View;
@@ -35,8 +30,7 @@
         import android.widget.LinearLayout;
         import android.widget.TextView;
 
-        import java.io.File;
-        import java.io.IOException;
+        import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 /**
  * Contains two sub-views to provide a simple stereo HUD.

@@ -1,9 +1,12 @@
-package com.google.vrtoolkit.cardboard.samples.treasurehunt;
+package com.google.vrtoolkit.cardboard.samples.treasurehunt.ApplicationSplash;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
+
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager.ListFilesActivity;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 public class SplashScreenActivity extends Activity {
     // Splash screen timer

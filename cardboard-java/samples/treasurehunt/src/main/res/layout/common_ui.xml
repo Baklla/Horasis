@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".TreasureHuntActivity">
+    tools:context=".CardboardEnvironment.ObsoleteClasses.TreasureHuntActivity">
 
 
     <com.google.vrtoolkit.cardboard.CardboardView
@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" />
 
-    <com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardOverlayView
+    <com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.CardboardOverlayView
         android:id="@+id/overlay"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
