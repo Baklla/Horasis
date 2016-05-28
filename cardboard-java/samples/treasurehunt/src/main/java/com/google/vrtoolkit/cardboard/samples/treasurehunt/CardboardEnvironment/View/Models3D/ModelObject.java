@@ -9,6 +9,8 @@ import java.nio.FloatBuffer;
  */
 public abstract class ModelObject {
 
+    //public static final float YAW_LIMIT = 0.12f;
+    //public static final float PITCH_LIMIT = 0.12f;
     public static final float YAW_LIMIT = 0.12f;
     public static final float PITCH_LIMIT = 0.12f;
 

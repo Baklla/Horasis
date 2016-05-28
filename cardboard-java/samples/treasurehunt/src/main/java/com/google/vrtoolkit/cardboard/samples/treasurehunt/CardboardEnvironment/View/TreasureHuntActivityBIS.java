@@ -32,6 +32,8 @@ import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.Model.Conversion;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonNext;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonPrevious;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonUnzoom;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.ButtonZoom;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Feuille;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.Floor;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.Models3D.InterfaceBtn;
@@ -61,7 +63,7 @@ public class TreasureHuntActivityBIS
   private static final float Z_NEAR = 0.1f;
   private static final float Z_FAR = 100.0f;
 
-  private static final float CAMERA_Z = 0.01f;
+  private float CAMERA_Z = 0.01f;
   private static final float TIME_DELTA = 0.3f;
 
   // We keep the light always position just above the user.
@@ -97,6 +99,8 @@ public class TreasureHuntActivityBIS
 
   private InterfaceBtn btnNext;
   private InterfaceBtn btnPrevious;
+  private InterfaceBtn btnZoom;
+  private InterfaceBtn btnUnzoom;
 
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -172,6 +176,8 @@ public class TreasureHuntActivityBIS
 
     this.btnNext = new ButtonNext(this);
     this.btnPrevious = new ButtonPrevious(this);
+    this.btnZoom = new ButtonZoom(this);
+    this.btnUnzoom = new ButtonUnzoom(this);
 
     camera = new float[16];
     view = new float[16];
@@ -232,6 +238,8 @@ public class TreasureHuntActivityBIS
     this.feuille.make();
     this.btnNext.make();
     this.btnPrevious.make();
+    this.btnZoom.make();
+    this.btnUnzoom.make();
     checkGLError("Objects makes");
 
     int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, R.raw.light_vertex);
@@ -263,6 +271,14 @@ public class TreasureHuntActivityBIS
     this.btnPrevious.program(vertexShader2,passthroughShader2);
     checkGLError("BtnPrevious program");
     checkGLError("BtnPrevious program params");
+
+    this.btnZoom.program(vertexShader2,passthroughShader2);
+    checkGLError("BtnZoom program");
+    checkGLError("BtnZoom program params");
+
+    this.btnUnzoom.program(vertexShader2,passthroughShader2);
+    checkGLError("BtnUnzoom program");
+    checkGLError("BtnUnzoom program params");
 /*
     // Avoid any delays during start-up due to decoding of sound files.
     new Thread(
@@ -290,10 +306,16 @@ public class TreasureHuntActivityBIS
     this.feuille.image = this.feuille.loadTexture(this, pdf.render());
 
     this.btnNext.updateModelPosition(this.btnNext.modelPosition,soundId,cardboardAudioEngine);
-    this.btnNext.image = this.btnNext.loadTexture(this, R.drawable.button_next);
+    this.btnNext.image = this.btnNext.loadTexture(this, R.drawable.button_next2);
 
     this.btnPrevious.updateModelPosition(this.btnPrevious.modelPosition,soundId,cardboardAudioEngine);
-    this.btnPrevious.image = this.btnPrevious.loadTexture(this, R.drawable.button_previous);
+    this.btnPrevious.image = this.btnPrevious.loadTexture(this, R.drawable.button_previous2);
+
+    this.btnZoom.updateModelPosition(this.btnZoom.modelPosition,soundId,cardboardAudioEngine);
+    this.btnZoom.image = this.btnZoom.loadTexture(this, R.drawable.button_zoom);
+
+    this.btnUnzoom.updateModelPosition(this.btnUnzoom.modelPosition,soundId,cardboardAudioEngine);
+    this.btnUnzoom.image = this.btnUnzoom.loadTexture(this, R.drawable.button_unzoom);
 
     checkGLError("onSurfaceCreated");
   }
@@ -408,6 +430,18 @@ public class TreasureHuntActivityBIS
     Matrix.multiplyMM(this.btnPrevious.modelViewProjection, 0, perspective, 0, this.btnPrevious.modelView, 0);
     this.btnPrevious.draw(lightPosInEyeSpace,this.btnPrevious.modelView,this.btnPrevious.modelViewProjection,headView);
     checkGLError("Drawing BtnPrevious");
+
+    // Set modelView for the sheet, so we draw sheet in the correct location
+    Matrix.multiplyMM(this.btnZoom.modelView, 0, view, 0, this.btnZoom.model, 0);
+    Matrix.multiplyMM(this.btnZoom.modelViewProjection, 0, perspective, 0, this.btnZoom.modelView, 0);
+    this.btnZoom.draw(lightPosInEyeSpace,this.btnZoom.modelView,this.btnZoom.modelViewProjection,headView);
+    checkGLError("Drawing BtnZoom");
+
+    // Set modelView for the sheet, so we draw sheet in the correct location
+    Matrix.multiplyMM(this.btnUnzoom.modelView, 0, view, 0, this.btnUnzoom.model, 0);
+    Matrix.multiplyMM(this.btnUnzoom.modelViewProjection, 0, perspective, 0, this.btnUnzoom.modelView, 0);
+    this.btnUnzoom.draw(lightPosInEyeSpace,this.btnUnzoom.modelView,this.btnUnzoom.modelViewProjection,headView);
+    checkGLError("Drawing BtnUnzoom");
   }
 
   @Override
@@ -440,11 +474,18 @@ public class TreasureHuntActivityBIS
     else if (this.btnNext.isLookingAtObject(headView)) {
       this.overlayView.show3DToast("Looking at BtnNext");
       if(this.pdf.nextPage()) this.pdf.hasChanged=true;
-
     }
     else if (this.btnPrevious.isLookingAtObject(headView)) {
       this.overlayView.show3DToast("Looking at BtnPrevious");
       if(this.pdf.previousPage()) this.pdf.hasChanged=true;
+    }
+    else if (this.btnZoom.isLookingAtObject(headView)) {
+      this.overlayView.show3DToast("Looking at BtnZoom");
+      if((CAMERA_Z-0.1)>-0.11) CAMERA_Z-=0.1f;
+    }
+    else if (this.btnUnzoom.isLookingAtObject(headView)) {
+      this.overlayView.show3DToast("Looking at BtnUnzoom");
+      if((CAMERA_Z+0.1)<0.51) CAMERA_Z+=0.1f;
     }
     else{
       this.overlayView.show3DToast("Looking at Nothing");
