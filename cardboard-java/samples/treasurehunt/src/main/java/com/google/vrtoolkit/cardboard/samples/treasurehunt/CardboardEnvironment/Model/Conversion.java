@@ -29,6 +29,7 @@ public class Conversion extends Observable {
     public Conversion(String path){
         try {
             // this.path = path;
+
             File f = new File(path);
             // Le path est passé en paramètre du constructeur mais aura été récup via un intent
             System.out.println(path);
@@ -42,6 +43,7 @@ public class Conversion extends Observable {
     }
 
     public Bitmap render(){//final Context context, Feuille obj, int image){
+        renderer.shouldScaleForPrinting();
         PdfRenderer.Page page = renderer.openPage(currentPage);
         int REQ_WIDTH = page.getWidth();
         int REQ_HEIGHT = page.getHeight();
@@ -52,9 +54,10 @@ public class Conversion extends Observable {
         Bitmap bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888); // 400/72 *dim pour augmenter résolution
         bitmap.eraseColor(Color.WHITE);
         Rect rect = new Rect(0, 0, 1080, 1080);
-        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-
-        //obj.loadTexture(context, bitmap);
+        synchronized (this) {
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+            System.out.println("Sync tex over");
+        }
         page.close();
         return bitmap;
     }
