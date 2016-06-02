@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Created by Quentin on 21/05/2016.
+ * Created by Horasis Team on 21/05/2016.
  */
 public class Floor extends ModelObject {
 

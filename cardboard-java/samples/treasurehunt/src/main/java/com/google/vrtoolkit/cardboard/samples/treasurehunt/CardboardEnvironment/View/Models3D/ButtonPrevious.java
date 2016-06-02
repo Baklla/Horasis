@@ -3,7 +3,7 @@ package com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment
 import android.content.Context;
 
 /**
- * Created by Quentin on 26/05/2016.
+ * Created by Horasis Team on 26/05/2016.
  */
 public class ButtonPrevious extends InterfaceBtn {
 

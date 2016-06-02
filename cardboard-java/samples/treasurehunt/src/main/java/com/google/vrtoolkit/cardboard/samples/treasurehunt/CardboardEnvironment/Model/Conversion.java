@@ -10,10 +10,8 @@ import java.io.File;
 import java.util.Observable;
 
 /**
- * Created by NicolasGaillard on 17/05/2016.
+ * Created by Horasis Team on 17/05/2016.
  */
-
-
 public class Conversion extends Observable {
 
     public PdfRenderer renderer;

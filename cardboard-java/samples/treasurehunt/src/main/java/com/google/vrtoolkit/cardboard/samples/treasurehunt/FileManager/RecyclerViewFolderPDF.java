@@ -16,7 +16,7 @@ import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.
 import java.util.ArrayList;
 
 /**
- * Created by Quentin on 10/05/2016.
+ * Created by Horasis Team on 10/05/2016.
  */
 public class RecyclerViewFolderPDF extends RecyclerView.Adapter<RecyclerViewFolderPDF.ViewHolder> {
 

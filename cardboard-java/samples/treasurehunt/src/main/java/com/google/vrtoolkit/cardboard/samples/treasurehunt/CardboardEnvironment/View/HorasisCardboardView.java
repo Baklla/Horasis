@@ -50,11 +50,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 
 /**
  * A Cardboard sample application.
- * </p><p>
- * The TreasureHunt scene consists of a planar ground grid and a floating
- * "treasure" cube. When the user looks at the cube, the cube will turn gold.
- * While gold, the user can activate the Carboard trigger, which will in turn
- * randomly reposition the cube.
  */
 public class HorasisCardboardView
     extends CardboardActivity implements CardboardView.StereoRenderer {

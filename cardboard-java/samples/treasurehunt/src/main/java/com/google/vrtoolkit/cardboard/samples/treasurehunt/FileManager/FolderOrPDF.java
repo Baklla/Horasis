@@ -1,7 +1,7 @@
 package com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager;
 
 /**
- * Created by Quentin on 10/05/2016.
+ * Created by Horasis Team on 10/05/2016.
  */
 public class FolderOrPDF implements Comparable<FolderOrPDF>  {
     private String path;

@@ -5,7 +5,7 @@ import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 import java.nio.FloatBuffer;
 
 /**
- * Created by Quentin on 21/05/2016.
+ * Created by Horasis Team on 21/05/2016.
  */
 public abstract class ModelObject {
 

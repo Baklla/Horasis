@@ -8,6 +8,9 @@ import android.os.Handler;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.FileManager.ListFilesActivity;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
+/**
+ * Created by Horasis Team on 10/05/2016.
+ */
 public class SplashScreenActivity extends Activity {
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;

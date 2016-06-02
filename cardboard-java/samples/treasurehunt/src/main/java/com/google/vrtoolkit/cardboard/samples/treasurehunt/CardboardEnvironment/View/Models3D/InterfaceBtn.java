@@ -17,7 +17,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by anthonygriffon on 25/05/2016.
+ * Created by Horasis Team on 25/05/2016.
  */
 public abstract class InterfaceBtn extends ModelObject {
 

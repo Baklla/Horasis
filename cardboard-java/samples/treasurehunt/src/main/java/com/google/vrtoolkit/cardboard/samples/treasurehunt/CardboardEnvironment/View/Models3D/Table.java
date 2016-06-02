@@ -10,7 +10,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by Quentin on 21/05/2016.
+ * Created by Horasis Team on 21/05/2016.
  */
 public class Table extends ModelObject {
 

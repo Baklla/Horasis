@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Created by Quentin on 27/05/2016.
+ * Created by Horasis Team on 27/05/2016.
  */
 public class Murs extends ModelObject {
 

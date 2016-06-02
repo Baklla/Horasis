@@ -14,7 +14,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by Horasis Team <3 on 21/05/2016.
+ * Created by Horasis Team on 21/05/2016.
  */
 public class Feuille extends ModelObject {
 
