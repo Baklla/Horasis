@@ -56,7 +56,7 @@ import javax.microedition.khronos.egl.EGLConfig;
  * While gold, the user can activate the Carboard trigger, which will in turn
  * randomly reposition the cube.
  */
-public class TreasureHuntActivityBIS
+public class HorasisCardboardView
     extends CardboardActivity implements CardboardView.StereoRenderer {
   private static final String TAG = "TreasureHuntActivity";
 
@@ -481,7 +481,7 @@ public class TreasureHuntActivityBIS
     }
     else if (this.btnZoom.isLookingAtObject(headView)) {
       this.overlayView.show3DToast("Looking at BtnZoom");
-      if((CAMERA_Z-0.1)>-0.11) CAMERA_Z-=0.1f;
+      if((CAMERA_Z-0.1)>0.01) CAMERA_Z-=0.1f;
     }
     else if (this.btnUnzoom.isLookingAtObject(headView)) {
       this.overlayView.show3DToast("Looking at BtnUnzoom");

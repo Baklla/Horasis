@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
-import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.TreasureHuntActivityBIS;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.CardboardEnvironment.View.HorasisCardboardView;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class RecyclerViewFolderPDF extends RecyclerView.Adapter<RecyclerViewFold
             viewHolder.linearItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, TreasureHuntActivityBIS.class);
+                    Intent intent = new Intent(context, HorasisCardboardView.class);
                     intent.putExtra("PDFFile", document.getName());
                     intent.putExtra("path", document.getPath());
                     context.startActivity(intent);
